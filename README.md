@@ -8,18 +8,18 @@
 #### 2 Background
 let $X \in \mathbb{R}^{n \times d}$
 - Self-attention:
-  \[
+  $$
   \text{Attention}(Q, K, V) = \text{softmax} ( \frac{QK^T}{\sqrt{d_k}} ) V
-  \]
+  $$
   where $Q = XW_Q, ~ K = XW_K, ~ V = XW_V$.
   
 - Depthwise convolutions:
   
   given that $W \in \mathbb{R}^{d \times k}$ for a kernel width $k$, and an 
   output $O \in \mathbb{R}^{n \times d}$, they define depthwise convolution as
-  \[
+  $$
   O_{i,c} = \text{DepthwiseConv}(X,W_{c,:},i,c) = \sum_{j=1}^k W_{c,j} X_{(i+j- \lceil \frac{k+1}{2} \rceil), c}
-  \]
+  $$
   I'm not quite sure why this name, because this equation definitely implies 
   that they're convolving in $n$, the time dimension?
 
@@ -36,9 +36,9 @@ let $X \in \mathbb{R}^{n \times d}$
   
   normalize the weights $W \in \mathbb{R}^{H \times k}$ across the temporal 
   dimension $k$ using a softmax:
-  \[
+  $$
   \text{softmax}(W)_{h,j} = \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}}
-  \]
+  $$
 - DropConnect:
    
   when dropping weights, drop every entry of normalized $\text{softmax}(W)$ 
@@ -46,10 +46,10 @@ let $X \in \mathbb{R}^{n \times d}$
   (removes some temporal info)
 
 So the full expression for Light Convolutions is:
-\[
+$$
 \text{LightConv}(X,W_{\lceil \frac{cH}{d} \rceil,:}, i, c) = \text{DepthwiseConv}
 (X,\text{DropConnect}(\text{softmax}(W_{\lceil \frac{cH}{d} \rceil,:},:)), i, c)
-\]
+$$
 
 #### 4 Dynamic Convolutions
 now we want to change $W$ based on the input at a timestep
@@ -57,13 +57,13 @@ now we want to change $W$ based on the input at a timestep
 We need a function $f : \mathbb{R}^d \to \mathbb{R}^{H \times k}$, so define a
 linear one using $W^Q \in \mathbb{R}^{H \times k \times d}$ such that at some
 particular timestep, 
-\[
+$$
 f(X_i) = W^QX_i = \sum_{c=1}^d W_{h,j,c}^Q X_{i,c}
-\]
+$$
 and we have the whole expression for dynamic convolutions:
-\[
+$$
 \text{DynamicConv}(X,i,c) = \text{LightConv}(X, f(X_i)_{h,:}, i, c)
-\]
+$$
 
 note that, like self-attention, the weights are changing per timestep
 
@@ -71,9 +71,9 @@ but, unlike self-attention, the changing weights depend only on the current
 timestep, not the whole sequence
 
 Full dynamic conv block includes gated linear unit (GLU), with the formula
-\[
+$$
 \text{GLU}(X) = \sigma(X_{:,(:,\frac{d}{2})}) \otimes X_{:,(\frac{d}{2},:)}
-\]
+$$
 
 and a linear projection upscaling $d \to 2d$ for the input $W_I \in \mathbb{R}^{d \times 2d}$
 and a linear projection at the output $W_O \in \mathbb{R}^{d \times d}$, so
