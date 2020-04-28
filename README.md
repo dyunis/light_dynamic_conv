@@ -10,43 +10,43 @@
 ![Dynamic vs. normal convolution](figs/dynamicconv.png)
 
 #### 2 Background
-let $X \in \mathbb{R}^{n \times d}$
+let \\(X \in \mathbb{R}^{n \times d}\\(
 - Self-attention:
   \\[
   \text{Attention}(Q, K, V) = \text{softmax} ( \frac{QK^T}{\sqrt{d_k}} ) V
   \\]
-  where $Q = XW_Q, ~ K = XW_K, ~ V = XW_V$.
+  where \\(Q = XW_Q, ~ K = XW_K, ~ V = XW_V\\).
   
 - Depthwise convolutions:
   
-  given that $W \in \mathbb{R}^{d \times k}$ for a kernel width $k$, and an 
-  output $O \in \mathbb{R}^{n \times d}$, they define depthwise convolution as
+  given that \\(W \in \mathbb{R}^{d \times k}\\) for a kernel width \\(k\\), and an 
+  output \\(O \in \mathbb{R}^{n \times d}\\), they define depthwise convolution as
   \\[
   O_{i,c} = \text{DepthwiseConv}(X,W_{c,:},i,c) = \sum_{j=1}^k W_{c,j} X_{(i+j- \lceil \frac{k+1}{2} \rceil), c}
   \\]
   I'm not quite sure why this name, because this equation definitely implies 
-  that they're convolving in $n$, the time dimension?
+  that they're convolving in \\(n\\), the time dimension?
 
 #### 3 Lightweight Convolutions
 - Weight sharing:
   
-  to reduce the number of parameters in the convolution, tie matrix $W$ into 
-  chunks of size $\frac{d}{H}$ in the first dimension of size $d$. This 
-  gives us a matrix $W \in \mathbb{R}^{H \times k}$ as the number of trainable
+  to reduce the number of parameters in the convolution, tie matrix \\(W\\( into 
+  chunks of size \\(\frac{d}{H}\\( in the first dimension of size \\(d\\(. This 
+  gives us a matrix \\(W \in \mathbb{R}^{H \times k}\\( as the number of trainable
   parameters.
   
   ![LightConv weight-tying](figs/weight_tying.png)
 - Softmax-normalization:
   
-  normalize the weights $W \in \mathbb{R}^{H \times k}$ across the temporal 
-  dimension $k$ using a softmax:
+  normalize the weights \\(W \in \mathbb{R}^{H \times k}\\) across the temporal 
+  dimension \\(k\\) using a softmax:
   \\[
   \text{softmax}(W)_{h,j} = \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}}
   \\]
 - DropConnect:
    
-  when dropping weights, drop every entry of normalized $\text{softmax}(W)$ 
-  with probability $p$ and divide the total vector by $1-p$ during training
+  when dropping weights, drop every entry of normalized \\(\text{softmax}(W)\\) 
+  with probability \\(p\\) and divide the total vector by \\(1-p\\) during training
   (removes some temporal info)
 
 So the full expression for Light Convolutions is:
@@ -56,10 +56,10 @@ So the full expression for Light Convolutions is:
 \\]
 
 #### 4 Dynamic Convolutions
-now we want to change $W$ based on the input at a timestep
+now we want to change \\(W\\( based on the input at a timestep
 
-We need a function $f : \mathbb{R}^d \to \mathbb{R}^{H \times k}$, so define a
-linear one using $W^Q \in \mathbb{R}^{H \times k \times d}$ such that at some
+We need a function \\(f : \mathbb{R}^d \to \mathbb{R}^{H \times k}\\), so define a
+linear one using \\(W^Q \in \mathbb{R}^{H \times k \times d}\\) such that at some
 particular timestep, 
 \\[
 f(X_i) = W^QX_i = \sum_{c=1}^d W_{h,j,c}^Q X_{i,c}
@@ -75,12 +75,13 @@ but, unlike self-attention, the changing weights depend only on the current
 timestep, not the whole sequence
 
 Full dynamic conv block includes gated linear unit (GLU), with the formula
+
 \\[
 \text{GLU}(X) = \sigma(X_{:,(:,\frac{d}{2})}) \otimes X_{:,(\frac{d}{2},:)}
 \\]
 
-and a linear projection upscaling $d \to 2d$ for the input $W_I \in \mathbb{R}^{d \times 2d}$
-and a linear projection at the output $W_O \in \mathbb{R}^{d \times d}$, so
+and a linear projection upscaling \\(d \to 2d\\) for the input \\(W_I \in \mathbb{R}^{d \times 2d}\\)
+and a linear projection at the output \\(W_O \in \mathbb{R}^{d \times d}\\), so
 the block that they actually replace self attention with is in figure 2:
 
 ![DynamicConv module](figs/dynamicconv_module.png)
@@ -94,8 +95,8 @@ the block that they actually replace self attention with is in figure 2:
 - fewer parameters, so to have a "fair" comparison, increase the number of blocks
   to 7 instead of 6 for the LightConv and DynamicConv versions
 - keep the number of decoder blocks at 6
-- kernel size: for encoder $k \in [3,7,15,31,31,31,31]$, for decoder $k \in [3, 7, 15, 31, 31, 31]$
-- $H=16$
+- kernel size: for encoder \\(k \in [3,7,15,31,31,31,31]\\), for decoder \\(k \in [3, 7, 15, 31, 31, 31]\\)
+- \\(H=16\\)
 
 ##### 5.2 Datasets and Evaluation
 - Machine translation (evaluated in BLEU): 
@@ -138,7 +139,7 @@ The gist is that it seems like everything imaginable is tuned
     - cosine learning rate schedule
     - weight decay 1e-3
     - dropout 0.3
-- also per task they have different kernel sizes $k$ and number of heads $H$
+- also per task they have different kernel sizes \\(k\\) and number of heads \\(H\\)
 
 #### 6 Results
 - Machine translation (Table 1 + 2):
@@ -157,5 +158,5 @@ The gist is that it seems like everything imaginable is tuned
 - basically the contribution here is showing that self-attention isn't strictly
   **needed**, but there are so many moving parts it's hard for me to tell what 
   is
-- also I went into this paper expecting the size of the kernel ($k$) and the 
+- also I went into this paper expecting the size of the kernel (\\(k\\)) and the 
   type of connections to be the dynamic part, but that stays fixed...
