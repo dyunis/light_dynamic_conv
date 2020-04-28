@@ -56,7 +56,7 @@ So the full expression for Light Convolutions is:
 \\]
 
 #### 4 Dynamic Convolutions
-now we want to change \\(W\\( based on the input at a timestep
+now we want to change \\(W\\) based on the input at a timestep
 
 We need a function \\(f : \mathbb{R}^d \to \mathbb{R}^{H \times k}\\), so define a
 linear one using \\(W^Q \in \mathbb{R}^{H \times k \times d}\\) such that at some
