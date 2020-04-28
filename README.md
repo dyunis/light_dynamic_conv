@@ -10,7 +10,7 @@
 ![Dynamic vs. normal convolution](figs/dynamicconv.png)
 
 #### 2 Background
-let \\(X \in \mathbb{R}^{n \times d}\\(
+let \\(X \in \mathbb{R}^{n \times d}\\)
 - Self-attention:
   \\[
   \text{Attention}(Q, K, V) = \text{softmax} ( \frac{QK^T}{\sqrt{d_k}} ) V
@@ -30,9 +30,9 @@ let \\(X \in \mathbb{R}^{n \times d}\\(
 #### 3 Lightweight Convolutions
 - Weight sharing:
   
-  to reduce the number of parameters in the convolution, tie matrix \\(W\\( into 
-  chunks of size \\(\frac{d}{H}\\( in the first dimension of size \\(d\\(. This 
-  gives us a matrix \\(W \in \mathbb{R}^{H \times k}\\( as the number of trainable
+  to reduce the number of parameters in the convolution, tie matrix \\(W\\) into 
+  chunks of size \\(\frac{d}{H}\\) in the first dimension of size \\(d\\). This 
+  gives us a matrix \\(W \in \mathbb{R}^{H \times k}\\) as the number of trainable
   parameters.
   
   ![LightConv weight-tying](figs/weight_tying.png)
@@ -40,9 +40,9 @@ let \\(X \in \mathbb{R}^{n \times d}\\(
   
   normalize the weights \\(W \in \mathbb{R}^{H \times k}\\) across the temporal 
   dimension \\(k\\) using a softmax:
-  \\[
-  \text{softmax}(W)_{h,j} = \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}}
-  \\]
+
+  \\[ \text{softmax}(W)_{h,j} = \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}} \\]
+  
 - DropConnect:
    
   when dropping weights, drop every entry of normalized \\(\text{softmax}(W)\\) 
