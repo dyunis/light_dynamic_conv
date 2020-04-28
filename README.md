@@ -41,10 +41,9 @@ let \\(X \in \mathbb{R}^{n \times d}\\)
   normalize the weights \\(W \in \mathbb{R}^{H \times k}\\) across the temporal 
   dimension \\(k\\) using a softmax:
   
-  \\[
-  \text{softmax}(W)_{h,j} = 
-  \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}}
-  \\]
+  \\(
+  \text{softmax}(W)_{h,j} = \frac{\exp(W_{h,j})}{\sum_{j'=1}^k \exp W_{h,j'}}
+  \\)
   
 - DropConnect:
    
