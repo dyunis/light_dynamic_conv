@@ -39,7 +39,7 @@ let \\(X \in \mathbb{R}^{n \times d}\\)
 - Softmax-normalization:
   
   normalize the weights \\(W \in \mathbb{R}^{H \times k}\\) across the temporal 
-  dimension (the one of size \\(k\\)) using a softmax:
+  dimension (the one of size \\(k\\)) using a softmax
   
 - DropConnect:
    
