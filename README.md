@@ -153,6 +153,13 @@ The gist is that it seems like everything imaginable is tuned
 - Summarization (Table 5):
     - outperforming baselines except for an RL method
     - is this a standard list of baselines?
+
+#### Appendix A
+- softmax normalization was required for convergence (and performs a tiny bit
+  better than just standard l2 normalization
+- I wondered about this choice in transformers as well, is it necessary there?
+
+#### Conclusion
 - basically the contribution here is showing that self-attention isn't strictly
   **needed**, but there are so many moving parts it's hard for me to tell what 
   is
