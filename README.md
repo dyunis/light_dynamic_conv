@@ -72,7 +72,8 @@ note that, like self-attention, the weights are changing per timestep
 but, unlike self-attention, the changing weights depend only on the current 
 timestep, not the whole sequence
 
-Now the full dynamic conv block includes other parts, first a linear projection
+##### Full module
+Now the full conv block includes other parts, first a linear projection
 upscaling the input from \\(d \to 2d\\), \\(W_I \in \mathbb{R}^{d \times 2d}\\)
 
 
