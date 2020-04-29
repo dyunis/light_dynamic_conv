@@ -136,7 +136,7 @@ The gist is that it seems like everything imaginable is tuned
     - Nesterov's accelerated gradient method
     - renormalize gradients if they exceed 0.1 norm
     - cosine learning rate schedule
-- Summarization"
+- Summarization
     - Adam
     - cosine learning rate schedule
     - weight decay 1e-3
