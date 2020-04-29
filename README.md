@@ -72,13 +72,16 @@ note that, like self-attention, the weights are changing per timestep
 but, unlike self-attention, the changing weights depend only on the current 
 timestep, not the whole sequence
 
-Full dynamic conv block includes gated linear unit (GLU), with the formula
+Now the full dynamic conv block includes other parts, first a linear projection
+upscaling the input from \\(d \to 2d\\), \\(W_I \in \mathbb{R}^{d \times 2d}\\)
+
+
+then a gated linear unit (GLU), with the formula
 
 \\[
-\text{GLU}(X) = \sigma(X_{:,(:,\frac{d}{2})}) \otimes X_{:,(\frac{d}{2},:)}
+\text{GLU}(X) = \sigma(X_{:,(:,d)}) \otimes X_{:,(d,2d)}
 \\]
 
-and a linear projection upscaling \\(d \to 2d\\) for the input \\(W_I \in \mathbb{R}^{d \times 2d}\\)
 and a linear projection at the output \\(W_O \in \mathbb{R}^{d \times d}\\), so
 the block that they actually replace self attention with is in figure 2:
 
